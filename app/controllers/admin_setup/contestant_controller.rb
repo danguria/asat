@@ -1,4 +1,4 @@
-class AdminSetup::AuctioneerController < ApplicationController
+class AdminSetup::ContestantController < ApplicationController
     skip_before_action :require_login
 
     def new
@@ -74,7 +74,7 @@ class AdminSetup::AuctioneerController < ApplicationController
         else
             flash[:success] = 'Failed to created a Auctioneer'
         end
-            redirect_to new_admin_setup_auctioneer_path
+            redirect_to new_admin_setup_contestant_path
     end
 
     def destroy
@@ -84,7 +84,7 @@ class AdminSetup::AuctioneerController < ApplicationController
         @new_auctioneer.destroy
         @auctioneer.destroy
         flash[:notice] = "Auctioneer #{@auctioneer.name} deleted"
-        redirect_to new_admin_setup_auctioneer_path
+        redirect_to new_admin_setup_contestant_path
     end
 
   private

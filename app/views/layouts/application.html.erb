@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Texas Auctioneer Association</title>
+  <title>Online Tournament & Assesment System</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -14,9 +14,9 @@
     <div class="navbar-header">
         <% if current_user %>
            <% if current_user.user_type == 'Admin' %>
-            <%= link_to 'Texas Auctioneer Association', admin_index_path, class: 'navbar-brand' %>
+            <%= link_to 'Online Tournament & Assesment System', admin_index_path, class: 'navbar-brand' %>
            <% else %>
-            <%= link_to 'Texas Auctioneer Association', judge_index_path, class: 'navbar-brand' %>
+            <%= link_to 'Online Tournament & Assessment System', judge_index_path, class: 'navbar-brand' %>
            <% end %>
         <% end %>
     </div>
@@ -55,10 +55,6 @@
   </div>
   <%= render 'shared/current_users' %>
 </div>
-
-<!--<footer>-->
-<!--    <p class="text-muted">Texas Auctioneer Association</p>-->
-<!--</footer>-->
 
 </body>
 </html>
