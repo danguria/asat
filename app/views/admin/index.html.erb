@@ -1,0 +1,94 @@
+<script>
+  document.getElementById('admin-nav').className = "active"; 
+</script>
+<p><%= @allAucList %></p>
+
+<% @contests.each do |contest| %>
+    <h2>Results for: 
+      <%= contest.contest_name%>
+    </h2>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-inverse">
+            <th>Division</th>
+            <th>Round</th>
+            <th>Name</th>
+            <th>Score</th>
+            <th>View Results</th>
+        </thead>
+        
+        <tbody>
+            <% Division.where(contest_id: contest.id).each do |div| %>
+                <% @aucList.each do |auc| %> 
+                    <% tempAuc = Auctioneer.find_by(:user_id => auc.id) %>
+                    <% if tempAuc.division_id == div.id #find auc by div%>
+                        <tr>
+                            <td><%= div.division_name %></td>
+                            <td><%= div.round %></td>
+                            <td><%= auc.name %></td>
+                            <td><%= @aucAvgScore[tempAuc.id] %></td>
+                            <td>
+                              <%=  link_to admin_scoreSummary_path(:auc_id => tempAuc.id, :avgScore => @aucAvgScore[tempAuc.id], :contest_name => contest.contest_name) do %>See
+                                  <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> 
+                              <% end %> 
+                            </td>
+                        </tr>
+
+                    <% end %> 
+                <% end %> 
+                <tr style="background-color: rgba(179, 204, 230,.25);"> <td> </td> <td> </td> <td> </td> <td> </td> <td> </td></tr>
+            <% end %> 
+        </tbody>
+          
+    </table>
+    <br>
+<% end %>
+  
+
+
+
+<script>
+
+$(document).ready(function () {
+    $(".btn-select").each(function (e) {
+        document.getElementById("admin-nav").className = "active"
+        var value = $(this).find("ul li.selected").html();
+        if (value != undefined) {
+            $(this).find(".btn-select-input").val(value);
+            $(this).find(".btn-select-value").html(value);
+        }
+    });
+});
+
+$(document).on('click', '.btn-select', function (e) {
+    e.preventDefault();
+    var ul = $(this).find("ul");
+    if ($(this).hasClass("active")) {
+        if (ul.find("li").is(e.target)) {
+            var target = $(e.target);
+            target.addClass("selected").siblings().removeClass("selected");
+            var value = target.html();
+            $(this).find(".btn-select-input").val(value);
+            $(this).find(".btn-select-value").html(value);
+            document.getElementById("resultsTitle").innerText = 'Realtime Results - ' + value.toString();
+            document.getElementById("judgeTitle").innerText = 'Judges - ' + value.toString();
+        }
+        ul.hide();
+        $(this).removeClass("active");
+    }
+    else {
+        $('.btn-select').not(this).each(function () {
+            $(this).removeClass("active").find("ul").hide();
+        });
+        ul.slideDown(300);
+        $(this).addClass("active");
+    }
+});
+
+$(document).on('click', function (e) {
+    var target = $(e.target).closest(".btn-select");
+    if (!target.length) {
+        $(".btn-select").removeClass("active").find("ul").hide();
+    }
+});
+
+</script>

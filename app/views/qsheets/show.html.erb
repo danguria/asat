@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+<script>
+  document.getElementById("admin-setup-nav").className = "active";
+</script>
+
+<ul class="nav nav-tabs">
+    <li><%= link_to 'Contest', new_admin_setup_contest_path %></li>
+    <li><%= link_to 'Judge', new_admin_setup_judge_path %></li>
+    <li><%= link_to 'Auctioneer', new_admin_setup_auctioneer_path %></li>
+    <li class='active'><%= link_to 'Questions', qsheets_path %></li>
+</ul>
+
+<%= link_to '< Back to QSheets', qsheets_path %>
+
+<%= render 'showQuestion' %>
+
+<button class="btn btn-default btn-med pull-right">
+  <%= link_to '+ Add New Questions', edit_qsheet_path(:id => @qsheet.division_id) %>
+</button>
+
+

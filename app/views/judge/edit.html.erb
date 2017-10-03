@@ -1,0 +1,48 @@
+<script>
+    document.getElementById("judge-nav").className = "active";
+</script>
+
+<button type="button" class="btn btn-default btn-sm">
+  <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> 
+  <%= link_to 'Back to list', judge_index_path %>
+</button>
+
+<h2>Scoring <%= @user.name %></h2>
+<h3>Contest: <%= @contest.contest_name %></h3>
+<h3>Division: <%= @div.division_name %></h3>
+<h3>Round: <%= @div.round %></h3>
+
+<div id='scoresheet'>
+<% qidx = 1 %>
+<%= form_for :judges, :url =>  judge_path(current_user), :html => { :method => :put }  do |f| %>
+  <%= f.hidden_field  :auc_id, :value => @auc.id %>
+  <%#= render 'shared/errors', object: @scores%>
+  <% @scores.each do |score| %>
+  <% @qs.each do |q| %>
+      <% if q.id == score[0].question_id && @auc.id == score[0].auctioneer_id %>
+        <%= fields_for "output[]",score[0] do |score_fields| %>
+        <div class="form-group">
+          <label > Question <%= qidx %>(type: <%= q.dataType%> ): <%= q.content %></label>
+          <% qidx = qidx + 1 %>
+        </div>
+        <div class="form-group">
+          <%#= score_fields.text_field :score, class: 'form-control', required: true %>
+          <% if q.dataType == "I" %>
+            <%= score_fields.select :score, options_for_select((0..10).step(1).to_a.map{|s| ["#{s}", s]})%>
+          <% elsif q.dataType == "S" %>
+            <%= score_fields.text_field :score, class: 'form-control', required: true %>
+          <% end %>
+
+        </div>
+        <%end%>
+      <%end%>
+  <% end %>
+  <% end %>
+    
+  <div class="form-group"> 
+    <input type="submit" value='Submit' class="btn btn-primary btn-med">
+    <span id="helpBlock" class="help-block">Note that once you submit this page,
+    you cannot view this page again!</span>
+  </div>
+<% end %>
+</div>
