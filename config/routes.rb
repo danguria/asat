@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   namespace :admin_setup do
     resources :contest, only: [:new, :create, :destroy, :edit, :show]
     resources :judge, only: [:new, :create, :destroy, :edit, :show]
-    resources :auctioneer, only: [:new, :create, :destroy, :edit, :show]
+    resources :contestant, only: [:new, :create, :destroy, :edit, :show]
     resources :question, only: [:new, :create, :destroy, :edit, :show]
   end
   get 'admin_setup' => 'admin_setup#setup'

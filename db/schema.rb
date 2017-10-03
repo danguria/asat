@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170425191343) do
+ActiveRecord::Schema.define(version: 20170925191343) do
 
   create_table "auctioneers", force: :cascade do |t|
     t.integer  "user_id"
@@ -24,8 +24,7 @@ ActiveRecord::Schema.define(version: 20170425191343) do
 
   create_table "contests", force: :cascade do |t|
     t.string   "contest_name", null: false
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.integer  "year"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
