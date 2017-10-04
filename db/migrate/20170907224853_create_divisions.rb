@@ -1,15 +1,14 @@
 class CreateDivisions < ActiveRecord::Migration
   def change
     create_table :divisions do |t|
-      t.string :division_name, null: false
-      t.integer :round, null: false
-      t.references :contest, foreign_key: true, null:false
-      t.string :status
-      #t.references :qsheet, foreign_key: true, null:false
-
-      t.timestamps
+      
+      t.string     :contest,  null: false, primary_key: true
+      t.integer    :year,     null: false, primary_key: true
+      
+      t.string     :division, null: false, primary_key: true
+      t.integer    :round,    null: false, primary_key: true
+      t.string     :done,     null: false
     end
     
-#    add_foreign_key :divisions, :contests
   end
 end

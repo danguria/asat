@@ -11,22 +11,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170925191343) do
+ActiveRecord::Schema.define(version: 20171003171410) do
 
-  create_table "auctioneers", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "division_id"
-    t.integer  "judge_id"
-    t.string   "done"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+  create_table "asks", force: :cascade do |t|
+    t.string  "contest"
+    t.integer "year"
+    t.string  "division"
+    t.integer "round"
+    t.string  "question"
+  end
+
+  create_table "assesses", force: :cascade do |t|
+    t.string  "judge"
+    t.string  "contestant"
+    t.string  "contest"
+    t.integer "year"
+    t.string  "division"
+    t.integer "round"
+    t.string  "question"
+    t.string  "score"
   end
 
   create_table "contests", force: :cascade do |t|
-    t.string   "contest_name", null: false
-    t.integer  "year"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.string  "name"
+    t.integer "year"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -46,49 +54,33 @@ ActiveRecord::Schema.define(version: 20170925191343) do
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
 
   create_table "divisions", force: :cascade do |t|
-    t.string   "division_name", null: false
-    t.integer  "round",         null: false
-    t.integer  "contest_id",    null: false
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string  "contest"
+    t.integer "year"
+    t.string  "division"
+    t.integer "round"
+    t.string  "done",     null: false
   end
 
-  create_table "judges", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "contest_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "participates", force: :cascade do |t|
+    t.string  "user"
+    t.string  "contest"
+    t.integer "year"
+    t.string  "division"
+    t.integer "round"
   end
 
-  create_table "qsheets", force: :cascade do |t|
-    t.integer  "division_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  create_table "questions", force: :cascade do |t|
-    t.integer  "qsheet_id"
-    t.string   "dataType"
-    t.string   "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "scoresheets", force: :cascade do |t|
-    t.integer  "auctioneer_id", null: false
-    t.integer  "question_id",   null: false
-    t.integer  "judge_id",      null: false
-    t.string   "score"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+  create_table "rubrics", force: :cascade do |t|
+    t.string "question"
+    t.string "qType",    null: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                                       null: false
+    t.string   "email"
+    t.string   "name",                                        null: false
+    t.string   "role",                                        null: false
+    t.string   "bare_password",                               null: false
     t.string   "crypted_password"
     t.string   "salt"
-    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "remember_me_token"
@@ -106,12 +98,9 @@ ActiveRecord::Schema.define(version: 20170925191343) do
     t.string   "reset_password_token"
     t.datetime "reset_password_token_expires_at"
     t.datetime "reset_password_email_sent_at"
-    t.string   "user_type"
-    t.string   "bare_password"
   end
 
   add_index "users", ["activation_token"], name: "index_users_on_activation_token"
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["last_logout_at", "last_activity_at"], name: "index_users_on_last_logout_at_and_last_activity_at"
   add_index "users", ["remember_me_token"], name: "index_users_on_remember_me_token"
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token"

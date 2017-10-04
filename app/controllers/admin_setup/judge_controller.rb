@@ -4,7 +4,7 @@ class AdminSetup::JudgeController < ApplicationController
     def new
         @user = User.new
         @new_judge = Judge.new
-        @member = User.where(user_type: "Judge")
+        @member = User.where(role: "Judge")
         @contest = Contest.new
         @judges = User.joins(:judges).pluck_to_hash(:contest_id)
         #@judges.each do |judge| Contest.where(:id => judge[:contest_id]).contest_name end
@@ -48,7 +48,7 @@ class AdminSetup::JudgeController < ApplicationController
         
         puts params
         
-        @user.user_type = "Judge"
+        @user.role = "Judge"
         @user.bare_password = @user.password
         
         if @user.save

@@ -6,10 +6,10 @@ class SessionsController < ApplicationController
 
   def create
     if login(params[:email], params[:password], params[:remember_me])
-      if current_user.user_type == "Admin"
+      if current_user.role == "Admin"
         flash[:success] = '(Admin) Welcome, ' + current_user.name
         redirect_to admin_index_path
-      elsif current_user.user_type == "Judge"
+      elsif current_user.role == "Judge"
         flash[:success] = '(Judge) Welcome, ' + current_user.name
         redirect_to judge_index_path
       end

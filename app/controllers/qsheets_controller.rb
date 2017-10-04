@@ -4,7 +4,7 @@ class QsheetsController < ApplicationController
   # GET /qsheets
   # GET /qsheets.json
   def index
-    if current_user.user_type == 'Admin'
+    if current_user.role == 'Admin'
       @qsheets = Qsheet.all
       @contests = Contest.all
       @divisions = Division.all

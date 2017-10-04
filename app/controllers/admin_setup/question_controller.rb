@@ -7,12 +7,6 @@ class AdminSetup::QuestionController< ApplicationController
 
     def index
       @questions = Question.all
-      # if current_user.user_type == 'Admin'
-      #   @questions = Question.all
-      # else 
-      #   _judgeContest = Judge.find_by_id(current_user.id)
-      #   @questions = 
-      # end 
       
     end
     

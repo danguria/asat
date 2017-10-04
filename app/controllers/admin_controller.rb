@@ -48,7 +48,7 @@ class AdminController < ApplicationController
            
         #So hannah. To find the average score of an auctioneer: avgScore = @aucAvgScore[auctioneer_id]
         
-        @aucList = User.where(user_type: "Auctioneer") #where auctioneers arent repeated
+        @aucList = User.where(role: "Auctioneer") #where auctioneers arent repeated
         
         
         

@@ -3,7 +3,7 @@ class AdminSetup::ContestantController < ApplicationController
 
     def new
         @user = User.new
-        @member = User.where(user_type: "Auctioneer")
+        @member = User.where(role: "Auctioneer")
         @division = Division.new
         @new_auctioneer = Auctioneer.new
         
@@ -56,7 +56,7 @@ class AdminSetup::ContestantController < ApplicationController
         @user.password = "auctioneer_default"
         @user.password_confirmation = "auctioneer_default"
         @user.bare_password = "auctioneer_default"
-        @user.user_type = "Auctioneer"
+        @user.role= "Auctioneer"
         
         if @user.save
             flash[:success] = 'Successfully created a Auctioneer'
