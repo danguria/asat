@@ -1,0 +1,47 @@
+<script>
+    document.getElementById("judge-nav").className = "active";
+</script>
+
+<button type="button" class="btn btn-default btn-sm">
+  <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> 
+  <%= link_to 'Back to list', participate_index_path %>
+</button>
+
+<h2>Scoring <%= @cuser.name %></h2>
+<h3>Contest: <%= @contestant.contest + " " + @contestant.year.to_s %></h3>
+<h3>Division: <%= @contestant.division %></h3>
+<h3>Round: <%= @contestant.round %></h3>
+
+<div id='scoresheet'>
+<% qidx = 1 %>
+<%= form_for :participates, :url =>  participate_path(@contestant), :html => { :method => :put }  do |f| %>
+  <%#= f.hidden_field  :auc_id, :value => @auc.id %>
+  <% @assess.each do |ass| %>
+    <% qs = ass[0] %>
+    <% type = ass[1] %>
+    <%= fields_for "output[]", qs do |q| %>
+      <div class="form-group">
+        <label > Question <%= qidx %>(type: <%= type[:qType] %> ): <%= qs[:question] %></label>
+        <% qidx = qidx + 1 %>
+      </div>
+      <div class="form-group">
+        <% if type[:qType] == "I" %>
+          
+          <% if qs[:qType] != "empty" %>
+            <%= q.select :score, options_for_select((0..10).step(1).to_a.map{|s| ["#{s}", s]}, qs[:score])%>
+          <% else %>
+            <%= q.select :score, options_for_select((0..10).step(1).to_a.map{|s| ["#{s}", s]})%>
+          <% end %>
+        <% elsif type[:qType] == "S" %>
+          <%= q.text_field :score, class: 'form-control', required: true %>
+        <% end %>
+      </div>
+    <%end%>
+  <% end %>
+  
+  <div class="form-group"> 
+    <input type="submit" value='Submit' class="btn btn-primary btn-med">
+  </div> 
+  
+<% end %>
+</div>

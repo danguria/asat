@@ -1,4 +1,4 @@
-class CreateAsk < ActiveRecord::Migration
+class CreateAsks < ActiveRecord::Migration
   def change
     create_table :asks do |t|
       t.string  :contest,  null: false, primary_key: true

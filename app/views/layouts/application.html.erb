@@ -16,7 +16,7 @@
            <% if current_user.role == 'Admin' %>
             <%= link_to 'Online Tournament & Assesment System', admin_index_path, class: 'navbar-brand' %>
            <% else %>
-            <%= link_to 'Online Tournament & Assessment System', judge_index_path, class: 'navbar-brand' %>
+            <%= link_to 'Online Tournament & Assessment System', participate_index_path, class: 'navbar-brand' %>
            <% end %>
         <% end %>
     </div>
@@ -27,7 +27,7 @@
              <li id="admin-nav"><%= link_to 'Admin Page', admin_index_path %></li>
              <li id="admin-setup-nav"><%= link_to 'Setup', admin_setup_path %></li>
            <% else %>
-             <li id="judge-nav"><%= link_to 'Judge Page', judge_index_path %></li>
+             <li id="judge-nav"><%= link_to 'Judge Page', participate_index_path %></li>
            <% end %> 
         <% else %>
           <li><%= link_to 'Log In', log_in_path %></li>

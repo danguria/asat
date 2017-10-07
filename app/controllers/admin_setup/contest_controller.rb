@@ -2,49 +2,47 @@ class AdminSetup::ContestController < ApplicationController
     skip_before_action :require_login
 
     def new
-        @contest = Contest.new
-        @division = Division.new
-        
-        @cList  = []
-        
-        @contest_all = Contest.all
-        @division_all = Division.all
-        
-        @division_all.each do |division|
-          @contest_all.each do |contest|
-            
-            if division.contest_id == contest.id
-              cnt = 0
-              cid_list = User.joins(:judges).pluck_to_hash(:contest_id) 
-              
-              cid_list.each do |cid|
-                if (cid[:contest_id] == contest.id)
-                  cnt = cnt + 1
-                end
-              end
-              
-              cnt_a = 0
-              did_list = Division.joins(:auctioneers).pluck_to_hash(:contest_id, :user_id, :division_id) 
-              
-              did_list.each do |did|
-                if (did[:division_id] == division.id)
-                  cnt_a = cnt_a + 1
-                end
-              end
-              
-              data = {}
-              data[:id] = contest.id
-              data[:division_id] = division.id
-              data[:contest_name] = contest.contest_name
-              data[:division_name] = division.division_name
-              data[:round] = division.round
-              data[:num_judge] = cnt
-              data[:num_auctioneer] = cnt_a
-            
-              @cList << data
+      # for the new contest and divisions
+      @contest = Contest.new 
+      @division = Division.new 
+     
+      # for the current contest and divisions 
+      @cList  = []
+      division_all = Division.all
+      division_all.each do |division|
+        users = Participate.where(
+          :contest  => division.contest,
+          :year     => division.year,
+          :division => division.division,
+          :round    => division.round
+          ).select(:user)
+          
+          cnt_judge = 0
+          cnt_contestants = 0
+          users.each do |user|
+            u = User.where(:email => user[:user])
+            if u[0].role == "Judge" then
+              cnt_judge = cnt_judge + 1
+            elsif u[0].role == "Contestant" then
+              cnt_contestants = cnt_contestants + 1
             end
           end
-        end
+      
+        contest_id = Contest.where(
+          :name => division[:contest], :year => division[:year]).select(:id)
+          
+        data                  = {}
+        data[:id]             = contest_id
+        data[:division_id]    = division.id
+        data[:contest_name]   = division.contest
+        data[:year]           = division.year
+        data[:division_name]  = division.division
+        data[:round]          = division.round
+        data[:num_judge]      = cnt_judge
+        data[:num_contestant] = cnt_contestants
+      
+        @cList << data
+      end
     end
 
     def index
@@ -52,9 +50,8 @@ class AdminSetup::ContestController < ApplicationController
     end
     
     def create
-        #@contest = Contest.find_by :params[:contest][:contest_name]
         
-        parser = DivisionParser.new(params[:division][:division_name])
+        parser = DivisionParser.new(params[:division][:division])
         if parser.parse_input_string
           #do nothing
         else
@@ -62,62 +59,85 @@ class AdminSetup::ContestController < ApplicationController
           redirect_to new_admin_setup_contest_path and return
         end
         rounds = parser.rounds
-        
-        @contest = Contest.new(contest_params) #moved here in case of error during parsing
+      
+        @contest = Contest.new(:name => params[:contest][:name])
+        @contest.year = Time.new.year
         if @contest.save
-            flash[:success] = 'Successfully added contest'
+          flash[:success] = 'Successfully added contest'
+          rounds.each do |round|
+              @division = Division.new(
+                :contest  => @contest[:name],
+                :year     => @contest[:year],
+                :division => round[0],
+                :round    => round[1]
+                )
+              @division.done = "no"
+              if @division.save == false
+                  flash[:success] = 'Failed to add division'
+              end
+          end
+        else
+          flash[:success] = 'Failed to add contest'
         end
         
-        rounds.each do |round|
-            @division = Division.new(:division_name => round[0],
-                                     :round => round[1],
-                                     :contest_id => @contest.id)
-            if @division.save
-                flash[:success] = 'Successfully added division'
-                
-                Qsheet.create!(:division_id => @division.id)
-            end
-        end
         
         redirect_to new_admin_setup_contest_path
     end
 
     def destroy
-        @division = Division.find params[:division_id]
-        #@new_judge = Judge.find_by(user_id: @judge.id)
+      division = Division.find params[:division_id]
+      
+      # delete ask
+      asks = Ask.where(
+        :contest  => division[:contest],
+        :year     => division[:year],
+        :division => division[:division],
+        :round    => division[:round])
+      asks.each do |ask| ask.destroy end
+      
+      # delete assess
+      assesses = Assess.where(
+        :contest  => division[:contest],
+        :year     => division[:year],
+        :division => division[:division],
+        :round    => division[:round])
+      assesses.each do |ass| ass.destroy end
+     
+      # delete participate
+      participates = Participate.where(
+        :contest  => division[:contest],
+        :year     => division[:year],
+        :division => division[:division],
+        :round    => division[:round])
+      participates.each do |p| p.destroy end
+      
+      
+      # delete contest if there isn't any division for the contest
+      remained = Division.where(
+        :contest => division[:contest],
+        :year    => division[:year])
         
-        @temp_contest_id = @division.contest_id
-        @temp_division_id = @division.id
+      if remained.size <= 1 then
+        contest = Contest.where(
+          :name => division[:contest],
+          :year => division[:year])
+         
+        # contest for this division should be only one 
+        contest.each do |c| c.destroy end  
+      end
+      
+      
+      # delete division
+      division.destroy
         
-        #@new_judge.destroy
-        
-        @temp_qsheet = Qsheet.find_by(division_id: @temp_division_id)
-        
-        @temp_questions = Question.find_by(qsheet_id: @temp_qsheet.id)
-        
-        if @temp_questions != nil
-          @temp_questions.destroy
-        end
-        
-        if @temp_qsheet != nil
-          @temp_qsheet.destroy
-        end
-        @division.destroy
-        @temp = Division.find_by(contest_id: @temp_contest_id)
-        
-        if @temp == nil
-          @contest = Contest.find_by(id: @temp_contest_id)
-          @contest.destroy
-        end
-        
-        flash[:notice] = "Division #{@division.division_name} deleted"
-        redirect_to new_admin_setup_contest_path
+      flash[:notice] = "Division #{division.contest} deleted"
+      redirect_to new_admin_setup_contest_path
     end
   
   private
 
     def contest_params
-        params.require(:contest).permit(:contest_name, :start_date, :end_date)
+        params.require(:contest).permit(:name, :year)
     end
     
     def division_params

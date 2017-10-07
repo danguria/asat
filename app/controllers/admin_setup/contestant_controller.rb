@@ -2,48 +2,29 @@ class AdminSetup::ContestantController < ApplicationController
     skip_before_action :require_login
 
     def new
+         # for the new contestant
         @user = User.new
-        @member = User.where(role: "Auctioneer")
-        @division = Division.new
-        @new_auctioneer = Auctioneer.new
-        
-        @user_all = User.all
-        @contest_all = Contest.all
-        @division_all = Division.all
-        @auctioneer_all = Auctioneer.select(:division_id, :user_id).uniq
-        
-        @aList = []
-        
-        @auctioneer_all.each do |auctioneer|
-            @division_all.each do |division|
-                if auctioneer.division_id == division.id
-                    @contest_all.each do |contest|
-                        if division.contest_id == contest.id
-                            mem = {}
-                            mem[:id] = auctioneer.user_id
-                            mem[:contest_id] = contest.id
-                            mem[:contest_name] = contest.contest_name
-                            mem[:division_name] = division.division_name
-                            mem[:round] = division.round
-                            
-                            @user_all.each do |user|
-                                if user.id == auctioneer.user_id
-                                    mem[:email] = user.email
-                                    mem[:name] = user.name
-                                    
-                                    break
-                                end
-                            end
-                            
-                            @aList << mem
-                            
-                            break
-                        end
-                    end
-                    
-                    break
-                end
-            end
+        @contest = Contest.new
+      
+        # list up the current contestant and their contest(division)
+        @cList  = []
+        users = User.where(role: "Contestant")
+        users.each do |u|
+            # TODO:
+            # User can participate more than one contest,
+            # but current user interface doesn’t support that
+            pContest = Participate.where(:user => u[:email])[0]
+            
+            c = Contest.where(
+                :name => pContest[:contest],
+                :year => pContest[:year])[0]
+            mem                 = {}
+            mem[:id]            = u[:id]
+            mem[:contest_id]    = c[:id]
+            mem[:name]          = u[:name]
+            mem[:email]         = u[:email]
+            mem[:contest_name]  = c[:name]
+            @cList << mem
         end
     end
 
@@ -52,16 +33,78 @@ class AdminSetup::ContestantController < ApplicationController
         @new_auctioneer = Auctioneer.new
     end
     def create
+        # create user
         @user = User.new(user_params)
-        @user.password = "auctioneer_default"
-        @user.password_confirmation = "auctioneer_default"
-        @user.bare_password = "auctioneer_default"
-        @user.role= "Auctioneer"
+        @user.password = "contest_default"
+        @user.password_confirmation = "contest_default"
+        @user.bare_password = "contest_default"
+        @user.role= "Contestant"
         
+        if @user.save
+            flash[:success] = 'Successfully created a Judge'
+            contest  = Contest.find(params[:contest][:name])
+            divisions = Division.where(
+                :contest => contest[:name],
+                :year    => contest[:year])
+            
+            divisions.each do |division|
+                # create participate
+                p = Participate.new(
+                    :user     => @user[:email],
+                    :contest  => division[:contest],
+                    :year     => division[:year],
+                    :division => division[:division],
+                    :round    => division[:round])
+                p.save
+                
+                p_contestants = Participate.where(
+                    :contest  => division[:contest],
+                    :year     => division[:year],
+                    :division => division[:division],
+                    :round    => division[:round])
+                    
+                contestants = []
+                p_contestants.each do |pc|
+                    user = User.where(:email => pc[:user])[0]
+                    if user.role == "Judge"
+                        contestants << user
+                    end
+                end
+                    
+                contestants.each do |c|
+                    asks = Ask.where(
+                        :contest  => division[:contest],
+                        :year     => division[:year],
+                        :division => division[:division],
+                        :round    => division[:round])
+                       
+                    # create assess based on ask
+                    asks.each do |ask|
+                        ass = Assess.new(
+                            :judge => c[:user],
+                            :contestant => @user[:email],
+                            :contest    => ask[:contest],
+                            :year       => ask[:year],
+                            :division   => ask[:division],
+                            :round      => ask[:round],
+                            :question   => ask[:question],
+                            :score      => "empty")
+                        ass.save
+                    end
+                end
+            end
+        else
+            flash[:success] = 'Failed to created a Judge'
+        end 
+       
+       
+       
+       
+        
+       
         if @user.save
             flash[:success] = 'Successfully created a Auctioneer'
             
-            puts "danguria div id #{params[:division][:division_name]}"
             div = Division.find_by(:id => params[:division][:division_name])
             Judge.where(:contest_id => div.contest_id).each do |judge|
                 new_auc = Auctioneer.new
@@ -78,12 +121,22 @@ class AdminSetup::ContestantController < ApplicationController
     end
 
     def destroy
-        @auctioneer = User.find params[:id]
-        @new_auctioneer = Auctioneer.find_by(user_id: @auctioneer.id)
+       
+        # delete user
+        contestant = User.find params[:id]
+        contestant.destroy
         
-        @new_auctioneer.destroy
-        @auctioneer.destroy
-        flash[:notice] = "Auctioneer #{@auctioneer.name} deleted"
+        # delete participate
+        ps = Participate.where(
+            :user => contestant[:email])
+        ps.each do |p| p.destroy end
+        
+        # delete assess
+        asseses = Assess.where(
+            :contestant => contestant[:email])
+        asseses.each do |ass| ass.destroy end
+        
+        flash[:notice] = "Contestant #{contestant.name} deleted"
         redirect_to new_admin_setup_contestant_path
     end
 

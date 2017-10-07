@@ -33,10 +33,10 @@
     </div>
     
     <div class="form-group">  
-      <label class="control-label col-sm-2">Division</label>
+      <label class="control-label col-sm-2">Contest</label>
       <div class="col-sm-10">
-          <%= fields_for @division do |division| %>
-            <%= division.collection_select :division_name, Division.all, :id, :name_with_round, include_blank: false %> 
+          <%= fields_for @contest do |contest| %>
+            <%= contest.collection_select :name, Contest.all, :id, :name, include_blank: false %> 
           <% end %>
       </div>
     </div>
@@ -59,17 +59,17 @@
       <tr>
         <th>Name</th>
         <th>Email</th>
-        <th>Contest, Division + Round</th>
+        <th>Contest</th>
         <th>Delete</th>
       </tr>
     </thead>
     
     <tbody>
-      <% @aList.each do |value|%>
+      <% @cList.each do |value|%>
       <tr>
         <td><%= value[:name] %></td>
         <td><%= value[:email] %></td>
-        <td><%= value[:contest_name] %>, <%= value[:division_name] %> <%= value[:round] %></td>
+        <td><%= value[:contest_name] %> </td>
         <td>
           <%=  link_to admin_setup_contestant_path(value), id: "Delete", :method => :delete do %>
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 

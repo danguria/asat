@@ -13,7 +13,7 @@
 
 <% @contests.each do |contest| %>
 <br>
-  <h1 class="display-4"><%= contest.contest_name%> Contest</h1>
+  <h1 class="display-4"><%= contest.name%> </h1>
   <table class="table table-striped table-bordered">
     <thead class="thead-inverse">
       <tr>
@@ -24,18 +24,14 @@
     </thead>
     
     <tbody>
-      <!--we are looking at a list of all qsheets
-      every round has 1 qsheet
-      fewere divisions than rounds
-      for each division, if its contest id 
-      matches the current contest id, we are good.-->
       <% @divisions.each do |division| %>
-      <%   if division.contest_id == contest.id %> 
+      <%   if division.contest == contest.name and 
+              division.year == contest.year %> 
             <tr>
-              <td><%= division.division_name %></td>
+              <td><%= division.division %></td>
               <td><%= division.round %></td>
               <td>
-                <%=  link_to qsheets_show_path(:id => division.id) do %> View questions
+                <%=  link_to qsheets_show_path(:id => division[:id]) do %> View questions
                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> 
                 <% end %> 
               </td>

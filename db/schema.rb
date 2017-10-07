@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20171003171410) do
 
   create_table "contests", force: :cascade do |t|
     t.string  "name"
-    t.integer "year"
+    t.integer "year", null: false
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -67,6 +67,12 @@ ActiveRecord::Schema.define(version: 20171003171410) do
     t.integer "year"
     t.string  "division"
     t.integer "round"
+  end
+
+  create_table "qsheets", force: :cascade do |t|
+    t.integer  "division_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "rubrics", force: :cascade do |t|

@@ -11,9 +11,12 @@ class SessionsController < ApplicationController
         redirect_to admin_index_path
       elsif current_user.role == "Judge"
         flash[:success] = '(Judge) Welcome, ' + current_user.name
-        redirect_to judge_index_path
+        redirect_to participate_index_path
+      else
+        logout
+        flash.now[:warning] = 'E-mail and/or password is incorrect.'
+        render 'new'
       end
-      #redirect_to root_path
     else
       flash.now[:warning] = 'E-mail and/or password is incorrect.'
       render 'new'

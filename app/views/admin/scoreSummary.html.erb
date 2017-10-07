@@ -3,28 +3,28 @@
     Back to Results
 <% end %> 
 
-<h1>Results for <%= @aucName %></h1>
+<h1>Results for <%= @sc[:user][:name]%></h1>
 <h3>
-  Tournament: <%= @contestName %> 
+  Contest: <%= @sc[:division][:contest] + " " + @sc[:division][:year].to_s %> 
 </h3>
 <h3>
-  Division: <%= @divName %> 
+  Division: <%= @sc[:division][:division] %> 
 </h3>
  <h3>
-  Round: <%= @divRound %> 
+  Round: <%= @sc[:division][:round] %> 
 </h3>
  <h3>
-  Average Score: <%= @averageScore %>
+  Average Score: <%= @sc[:avg] %>
 </h3>
 <br/>
-<% @judgeHash.each do |key, lol_quad| %>
+<% @sj.each do |key, assess| %>
     <% @dataRow = 0 %>
     <table class="table table-bordered">
         <thead class="thead-inverse">
             <tr>
                 <th colspan="4">
                     Scoresheet # <%= @scoresheetN += 1 %>  <br/>
-                    Judged by: <%= lol_quad[ @scoresheetN-1][2] %>
+                    Judged by: <%= key %>
                 </th>
             </tr>
         </thead>
@@ -33,16 +33,14 @@
               <th>#</th>
               <th>Question</th>
               <th>Score</th>
-              <th>Submitted</th>
         </tr>
       </thead>
       <tbody>
-        <% lol_quad.each do |quad| %>
+        <% assess.each do |ass| %>
             <tr>
               <th scope="row"><%= @dataRow += 1 %></th>
-              <td> <%= quad[0] %> </td>
-              <td> <%= quad[1] %> </td>
-              <td> <%= quad[3] %> </td>
+              <td> <%= ass[:question] %> </td>
+              <td> <%= ass[:score] %> </td>
             </tr>
         <% end %>
       </tbody>
