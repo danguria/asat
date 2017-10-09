@@ -80,7 +80,7 @@ class AdminSetup::JudgeController < ApplicationController
                     asks.each do |ask|
                         ass = Assess.new(
                             :judge => @user[:email],
-                            :contestant => c[:user],
+                            :contestant => c[:email],
                             :contest    => ask[:contest],
                             :year       => ask[:year],
                             :division   => ask[:division],
@@ -91,6 +91,7 @@ class AdminSetup::JudgeController < ApplicationController
                     end
                 end
             end
+            flash[:success] = 'Succeed to created a Judge'
         else
             flash[:success] = 'Failed to created a Judge'
         end

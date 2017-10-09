@@ -8,7 +8,7 @@ class CreateAssess < ActiveRecord::Migration
       t.string  :division,   null: false, unique: true
       t.integer :round,      null: false, unique: true
       t.string  :question,   null: false, unique: true
-      t.string  :score,      null: true
+      t.string  :score,      null: false
       
     end
   end

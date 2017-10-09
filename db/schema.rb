@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20171003171410) do
     t.string  "division",   null: false
     t.integer "round",      null: false
     t.string  "question",   null: false
-    t.string  "score"
+    t.string  "score",      null: false
   end
 
   create_table "contests", force: :cascade do |t|

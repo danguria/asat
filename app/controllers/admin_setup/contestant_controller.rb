@@ -80,7 +80,7 @@ class AdminSetup::ContestantController < ApplicationController
                     # create assess based on ask
                     asks.each do |ask|
                         ass = Assess.new(
-                            :judge => c[:user],
+                            :judge => c[:email],
                             :contestant => @user[:email],
                             :contest    => ask[:contest],
                             :year       => ask[:year],
@@ -92,15 +92,11 @@ class AdminSetup::ContestantController < ApplicationController
                     end
                 end
             end
-        else
-            flash[:success] = 'Failed to created a Judge'
-        end 
-       
-        if @user.save
             flash[:success] = 'Successfully created a Contestant'
         else
-            flash[:success] = 'Failed to created a Contestant'
-        end
+            flash[:success] = 'Failed to created a contestant'
+        end 
+       
         redirect_to new_admin_setup_contestant_path
     end
 
