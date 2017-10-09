@@ -14,26 +14,26 @@
 ActiveRecord::Schema.define(version: 20171003171410) do
 
   create_table "asks", force: :cascade do |t|
-    t.string  "contest"
-    t.integer "year"
-    t.string  "division"
-    t.integer "round"
-    t.string  "question"
+    t.string  "contest",  null: false
+    t.integer "year",     null: false
+    t.string  "division", null: false
+    t.integer "round",    null: false
+    t.string  "question", null: false
   end
 
   create_table "assesses", force: :cascade do |t|
-    t.string  "judge"
-    t.string  "contestant"
-    t.string  "contest"
-    t.integer "year"
-    t.string  "division"
-    t.integer "round"
-    t.string  "question"
+    t.string  "judge",      null: false
+    t.string  "contestant", null: false
+    t.string  "contest",    null: false
+    t.integer "year",       null: false
+    t.string  "division",   null: false
+    t.integer "round",      null: false
+    t.string  "question",   null: false
     t.string  "score"
   end
 
   create_table "contests", force: :cascade do |t|
-    t.string  "name"
+    t.string  "name", null: false
     t.integer "year", null: false
   end
 
@@ -54,19 +54,19 @@ ActiveRecord::Schema.define(version: 20171003171410) do
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
 
   create_table "divisions", force: :cascade do |t|
-    t.string  "contest"
-    t.integer "year"
-    t.string  "division"
-    t.integer "round"
+    t.string  "contest",  null: false
+    t.integer "year",     null: false
+    t.string  "division", null: false
+    t.integer "round",    null: false
     t.string  "done",     null: false
   end
 
   create_table "participates", force: :cascade do |t|
-    t.string  "user"
-    t.string  "contest"
-    t.integer "year"
-    t.string  "division"
-    t.integer "round"
+    t.string  "user",     null: false
+    t.string  "contest",  null: false
+    t.integer "year",     null: false
+    t.string  "division", null: false
+    t.integer "round",    null: false
   end
 
   create_table "qsheets", force: :cascade do |t|
@@ -76,12 +76,12 @@ ActiveRecord::Schema.define(version: 20171003171410) do
   end
 
   create_table "rubrics", force: :cascade do |t|
-    t.string "question"
+    t.string "question", null: false
     t.string "qType",    null: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email"
+    t.string   "email",                                       null: false
     t.string   "name",                                        null: false
     t.string   "role",                                        null: false
     t.string   "bare_password",                               null: false
