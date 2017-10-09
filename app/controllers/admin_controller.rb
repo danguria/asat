@@ -50,7 +50,7 @@ class AdminController < ApplicationController
                         sd[:division] = div
                         sd[:user] = user
                         if cnt > 0
-                            sd[:avg] = sum / cnt
+                            sd[:avg] = sum.to_f / cnt
                         elsif 
                             sd[:avg] = 0
                         end
