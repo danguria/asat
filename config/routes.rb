@@ -12,10 +12,9 @@ Rails.application.routes.draw do
     end
     get 'admin_setup' => 'admin_setup#setup'
     get 'admin_judge' => 'admin#judge'
-    get 'admin_auctioneer' => 'admin#auctioneer'
     get 'admin_contest' => 'admin#contest'
 
-    resources :admin, only: [:index, :judge, :auctioneer, :contest, :new, :create, :show]
+    resources :admin, only: [:index, :judge, :contest, :new, :create, :show]
     resources :participate, only: [:index, :edit, :update, :show]
     # resources :qsheets, only: [:index, :edit, :new, :show, :destroy]
 

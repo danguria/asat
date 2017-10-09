@@ -17,7 +17,7 @@ users = [
 contestants = []
 judges = []
 
-(1..20).each do |i|
+(1..8).each do |i|
  c = {
   :email => "contestant" + i.to_s + "@gmail.com",
   :password => "123",
@@ -66,7 +66,7 @@ rubrics = [
    :qType => "I"
    },
   {
-  :question => "[Professionalism] Overall impression: Do you believe the Contestant fairly represented the merchandise, the auction profession, and would you hire this Contestant to sell your sale.	",
+  :question => "[Professionalism] Overall impression: Do you believe the Contestant fairly represented the merchandise, the profession, and would you hire this Contestant to sell your sale.	",
    :qType => "I"
   },
   {
@@ -96,25 +96,25 @@ end
     pcs = []
     pjs = []
     if i == 1
-     (0..4).each do |idx|
+     (0..1).each do |idx|
       puts "add ps " + idx.to_s
       pcs << {:email => contestants[idx][:email] }
       pjs << {:email => judges[idx][:email] }
      end
     elsif i == 2
-     (5..9).each do |idx|
+     (2..3).each do |idx|
       puts "add ps " + idx.to_s
       pcs << {:email => contestants[idx][:email] }
       pjs << {:email => judges[idx][:email] }
      end
     elsif i == 3
-     (10..14).each do |idx|
+     (4..5).each do |idx|
       puts "add ps " + idx.to_s
       pcs << {:email => contestants[idx][:email] }
       pjs << {:email => judges[idx][:email] }
      end
     elsif i == 4
-     (15..19).each do |idx|
+     (6..7).each do |idx|
       puts "add ps " + idx.to_s
       pcs << {:email => contestants[idx][:email] }
       pjs<< {:email => judges[idx][:email] }

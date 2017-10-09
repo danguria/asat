@@ -30,7 +30,6 @@ class AdminSetup::ContestantController < ApplicationController
 
     def index
         @user = User.new
-        @new_auctioneer = Auctioneer.new
     end
     def create
         # create user
@@ -97,27 +96,12 @@ class AdminSetup::ContestantController < ApplicationController
             flash[:success] = 'Failed to created a Judge'
         end 
        
-       
-       
-       
-        
-       
         if @user.save
-            flash[:success] = 'Successfully created a Auctioneer'
-            
-            div = Division.find_by(:id => params[:division][:division_name])
-            Judge.where(:contest_id => div.contest_id).each do |judge|
-                new_auc = Auctioneer.new
-                new_auc.user_id = @user.id
-                new_auc.division_id = div.id
-                new_auc.judge_id = judge.id
-                new_auc.done = "false"
-                new_auc.save
-            end
+            flash[:success] = 'Successfully created a Contestant'
         else
-            flash[:success] = 'Failed to created a Auctioneer'
+            flash[:success] = 'Failed to created a Contestant'
         end
-            redirect_to new_admin_setup_contestant_path
+        redirect_to new_admin_setup_contestant_path
     end
 
     def destroy

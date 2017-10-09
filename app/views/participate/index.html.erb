@@ -10,7 +10,7 @@
       <tr>
         <th>Division</th>
         <th>Round</th>
-        <th>View Auctioneers</th>
+        <th>View Contestant</th>
       </tr>
     </thead>
     
@@ -19,7 +19,7 @@
         <tr>
           <td><%= p[:division] %></td>
           <td><%= p[:round] %></td>
-          <td> <%= link_to 'See Auctioneers', participate_path(:id => p[:id]) %> </td>
+          <td> <%= link_to 'See Contestant', participate_path(:id => p[:id]) %> </td>
         </tr>
       <% end %>
     </tbody>

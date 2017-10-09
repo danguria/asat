@@ -64,7 +64,7 @@ class ParticipateController < ApplicationController
         end
         
       if success
-        flash[:success] = 'Auctioneer Judged Successfully'
+        flash[:success] = 'Contestant Judged Successfully'
       end
 
       redirect_to participate_index_path

@@ -7,16 +7,7 @@ class QsheetsController < ApplicationController
     if current_user.role == 'Admin'
       @contests = Contest.all
       @divisions = Division.all
-    else 
-      @@contest_id = Contest.find(Judge.find(current_user.id)).id
-      _allDivisions = Division.find_by_contest_id(contest_id)
-      _allDivisions.each do |currDiv|
-        @qsheets = Qsheet.find_by_division_id(currDiv.id)
-      end 
     end 
-      
-    
-    # @currIndex = 0
   end
 
   # GET /qsheets/1
@@ -47,8 +38,6 @@ class QsheetsController < ApplicationController
   # GET /qsheets/new
   def new
     @contest = Contest.find(params[:id])
-    #@qsheet = Qsheet.new
-    #2.times { @qsheet.questions.build }
   end
 
   # GET /qsheets/1/edit
@@ -68,25 +57,7 @@ class QsheetsController < ApplicationController
   # POST /qsheets
   # POST /qsheets.json
   def create
-    #division = Division.find(params[:id])
-    #puts "dataType: " + params[:qsheet][:questions_attributes][0][:dataType]
-=begin 
-    rubric = Rubric.new(rubric_params)
-    respond_to do |format|
-      if rubric.save
-        format.html { redirect_to @qsheet, notice: 'Qsheet was successfully created.' }
-        format.json { render :show, id: @qsheet.id, status: :created, location: @qsheet }
-      else
-        format.html { render :new }
-        format.json { render json: @qsheet.errors, status: :unprocessable_entity }
-      end
-    end
-=end
   end
-  
-  
-  
-  
   
   # PATCH/PUT /qsheets/1
   # PATCH/PUT /qsheets/1.json
@@ -194,36 +165,6 @@ class QsheetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def rubric_params
-      #params.require(:qsheet).permit(:contest, :questions_attributes => [:id, :content, :dataType])
       params.require(:rubric).permit(:contest, :questions_attributes => [:id, :question, :qType])
-    end
-
-    def save_questions(qs, division_id)
-      if qs == nil
-        return false
-      end
-      qs.each do |q|
-        if q[1][:dataType] == "I" || q[1][:dataType] == "S"
-          question = Question.new
-          question.dataType = q[1][:dataType]
-          question.content = q[1][:content]
-          question.qsheet_id= Qsheet.find_by(:division_id => division_id).id
-          if !question.save()
-            return false
-          end
-  
-          Auctioneer.where(:division_id => division_id).each do |auc|
-            score = Scoresheet.new
-            score.auctioneer_id = auc.id
-            score.question_id = question.id
-            score.judge_id = auc.judge_id
-            score.score = "empty"
-            if !score.save()
-              return false
-            end
-          end
-        end
-      end
-      return true
     end
 end

@@ -19,10 +19,6 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
   
-  has_many :judges
-  has_many :auctioneers
-  #establish_connection :the_database
-
   validates :password, length: { minimum: 3 }
   validates :password, confirmation: true
   validates :email, uniqueness: true, email_format: { message: 'has invalid format' }
