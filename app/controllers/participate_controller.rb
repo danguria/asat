@@ -56,7 +56,7 @@ class ParticipateController < ApplicationController
         
             puts "trying to update " + ass[:id].to_s + "'th assess"   
             puts "score " +  ass[:score] 
-            ass[:score] = params['output'][(i+1).to_s][:score]
+            ass[:score] = params['output'][ass[:id].to_s][:score]
             if (!ass.save())
                 flash[:warnning] = 'Judging Failed'
                 success = false
