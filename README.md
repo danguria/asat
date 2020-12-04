@@ -1,7 +1,6 @@
 # Cource Project #1
 
 - Student Name : Sungkeun Kim
-- UIN          : 325003839
 
 # What the Project does is ...
 For this project I have designed a site to assist in managing and judging contestants for any types of a Contest you want to hold. This will be done by allowing an administrator to create questions, add judges, and formulate contestants’ performances based on a tournament-like hierarchal structure. The key component to our project is that the admin has all authority. There is no signup page since the power of making accounts is under the scope of the admin.
